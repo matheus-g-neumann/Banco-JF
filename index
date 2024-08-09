@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banco Simples - Registro e Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #00FF00; /* Cor de fundo verde brilhante */
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input, button {
+            margin-bottom: 10px;
+            display: block;
+            width: 100%;
+            max-width: 300px; /* Limita a largura dos inputs e botões */
+        }
+        video {
+            width: 100%; /* Ajusta a largura do vídeo para ocupar toda a largura do contêiner pai */
+            max-width: 800px; /* Define uma largura máxima para o vídeo */
+            height: auto; /* Mantém a proporção do vídeo */
+            display: block; /* Remove o espaço abaixo do vídeo */
+            margin-bottom: 20px; /* Espaço abaixo do vídeo */
+        }
+        p {
+            color: red; /* Destaca mensagens de erro */
+        }
+    </style>
+</head>
+<body>
+    <h1>Banco JF BANK</h1>
+    
+    <video controls>
+        <source src="midia1.mp4" type="video/mp4">
+        Seu navegador não suporta o elemento de vídeo.
+    </video>
+
+    <!-- Formulário de Registro -->
+    <div id="registerSection">
+        <h2>Registro</h2>
+        <form onsubmit="event.preventDefault(); register();">
+            <input type="text" id="registerUsername" placeholder="Nome de Usuário" aria-label="Nome de Usuário" required>
+            <input type="password" id="registerPassword" placeholder="Senha" aria-label="Senha" required>
+            <button type="submit">Registrar</button>
+            <p id="registerMessage"></p>
+        </form>
+    </div>
+
+    <!-- Formulário de Login -->
+    <div id="loginSection">
+        <h2>Login</h2>
+        <form onsubmit="event.preventDefault(); login();">
+            <input type="text" id="loginUsername" placeholder="Nome de Usuário" aria-label="Nome de Usuário" required>
+            <input type="password" id="loginPassword" placeholder="Senha" aria-label="Senha" required>
+            <button type="submit">Entrar</button>
+            <p id="loginMessage"></p>
+        </form>
+    </div>
+    
+    <script>
+        function register() {
+            const username = document.getElementById('registerUsername').value;
+            const password = document.getElementById('registerPassword').value;
+
+            if (!username || !password) {
+                document.getElementById('registerMessage').textContent = 'Por favor, preencha todos os campos.';
+                return;
+            }
+
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            if (users.some(user => user.username === username)) {
+                document.getElementById('registerMessage').textContent = 'Nome de usuário já existe.';
+                return;
+            }
+
+            users.push({ username, password });
+            localStorage.setItem('users', JSON.stringify(users));
+            document.getElementById('registerMessage').textContent = 'Usuário registrado com sucesso!';
+        }
+
+        function login() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(user => user.username === username && user.password === password);
+
+            if (user) {
+                localStorage.setItem('currentUser', username);
+                window.location.href = 'transactions.html';
+            } else {
+                document.getElementById('loginMessage').textContent = 'Nome de usuário ou senha inválidos.';
+            }
+        }
+    </script>
+</body>
+</html>
